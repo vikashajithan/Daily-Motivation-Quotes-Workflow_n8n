@@ -1,0 +1,136 @@
+{
+  "name": "motivation_quotes",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a powerful motivational coach.\n\nWrite a short morning motivation email.\n\nRequirements:\n- Start with an energetic greeting.\n- Give strong motivation about discipline and consistency.\n- Remind the reader to focus on their main goal.\n- Encourage taking action today.\n\n- Make it powerful, clear, and action-oriented.\n\n\nDo not make it too long.\ngive it short and sweet dont reach max one line.\n\nadd my name inthe last [vikash]",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        144,
+        0
+      ],
+      "id": "18278d6e-a1d3-43c2-b38e-b7c87f311ab0",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        144,
+        192
+      ],
+      "id": "222a98aa-0e86-4b73-a503-767104839ab0",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "S6HVay2tOfBEKhjK",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "vikashwork7@gmail.com",
+        "subject": "Daily motivation ",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "id": "cb31a645-d8a7-4790-a419-bafab65d865d",
+      "name": "Send a message",
+      "webhookId": "8eff5e2d-2e24-44bb-b1b7-edcf3a08c465",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "oxya59SQgIAarzAu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "89278f16-9ee8-4a1e-8508-a8fc6ad89abb",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "a32bd543-5041-4664-a26a-3877d24ce39a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a2c9f298b4688490532bc5633f716bea0c4b2d29658ee4e9f53436353c79f4fd"
+  },
+  "id": "nNz5eXCoyhWV3kKa",
+  "tags": []
+}
